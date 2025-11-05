@@ -1,6 +1,6 @@
 services:
   - type: worker
-    name: telegram-scheduler-bot
+    name: telegram-bot-15min
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
