@@ -15,8 +15,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# بيانات API من متغيرات البيئة
-API_ID = int(os.getenv('API_ID', '20529343'))
+# بيانات API - مع قيم افتراضية آمنة
+try:
+    API_ID = int(os.getenv('API_ID', '20529343'))
+except (ValueError, TypeError):
+    API_ID = 20529343  # قيمة افتراضية
+
 API_HASH = os.getenv('API_HASH', '656199efaf0935e731164fb9d02e4aa6')
 SESSION_STRING = os.getenv('SESSION_STRING', '1BJWap1sAUKCga9Dy1BqPcz5tmD1gA_PLH7-X8xC188Xn0vvZrnqUwh7O0jWMKIcIhzYz0tjwSAlYepRnH1pzhWcDFmN8gy-SgE9XzUuufmNnnvh7PTvMp2UUAYp_LndEphU799jH3_GbSCoZ3CpD-_clEtR1La1Kz_WuITPOUsOpSh5ipBEOmDygRQ6bUCUveRorp0Rxu2Whg9eVR_QZWR4ra2HJaOVF4iYZx-Odoj5zOhE9JxI1R0bQSaJoMcBoZJDfVkPJk5xmT3m1RFKGV35YS32GX71vBDtjg6lN4yqPtdeDpUFlsLPPptzBF3nV7NV3I6QC2yHqF-uNSYGsq4m0QD-DoWA=')
 
@@ -28,6 +32,14 @@ min_delay = 15
 max_delay = 35
 
 from telethon import TelegramClient, events
+
+# إنشاء العميل في البداية
+client = TelegramClient(
+    session=None,
+    api_id=API_ID,
+    api_hash=API_HASH,
+    session_string=SESSION_STRING
+)
 
 def can_schedule():
     global last_schedule_time
@@ -410,14 +422,6 @@ async def help_handler(event):
 • الفاصل: 15 دقيقة
 • الإجمالي: 96 رسالة/يوم"""
     await event.reply(help_text)
-
-# إنشاء العميل
-client = TelegramClient(
-    session=None,
-    api_id=API_ID,
-    api_hash=API_HASH,
-    session_string=SESSION_STRING
-)
 
 async def main():
     try:
