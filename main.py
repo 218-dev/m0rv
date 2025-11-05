@@ -32,13 +32,13 @@ min_delay = 15
 max_delay = 35
 
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 
-# إنشاء العميل في البداية
+# إنشاء العميل باستخدام StringSession
 client = TelegramClient(
-    session=None,
+    session=StringSession(SESSION_STRING),
     api_id=API_ID,
-    api_hash=API_HASH,
-    session_string=SESSION_STRING
+    api_hash=API_HASH
 )
 
 def can_schedule():
