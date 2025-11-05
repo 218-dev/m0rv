@@ -1,9 +1,8 @@
 name: Telegram Bot Runner
 
 on:
-  workflow_dispatch:  # تشغيل يدوي
+  workflow_dispatch:
   schedule:
-    # تشغيل تلقائي كل 6 ساعات لإبقاء البوت نشطاً
     - cron: '0 */6 * * *'
 
 jobs:
@@ -29,13 +28,4 @@ jobs:
         API_HASH: ${{ secrets.API_HASH }}
         SESSION_STRING: ${{ secrets.SESSION_STRING }}
       run: |
-        python main.py &
-        BOT_PID=$!
-        echo "البوت يعمل بالرقم: $BOT_PID"
-        
-        # انتظار 55 دقيقة ثم إعادة التشغيل
-        sleep 3300
-        echo "إعادة تشغيل البوت..."
-        kill $BOT_PID
-        sleep 5
         python main.py
