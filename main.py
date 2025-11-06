@@ -19,10 +19,10 @@ logger = logging.getLogger(__name__)
 try:
     API_ID = int(os.getenv('API_ID', '20529343'))
 except (ValueError, TypeError):
-    API_ID = 20529343  # قيمة افتراضية
+    API_ID = 20529343
 
 API_HASH = os.getenv('API_HASH', '656199efaf0935e731164fb9d02e4aa6')
-SESSION_STRING = os.getenv('SESSION_STRING', '1BJWap1sAUJS3-tR0lExtXlh888WvJFDuMDTOGnucjcYWsK-a0YrI_H1EzEOyAoOHlDbV275kZ-Zc-k0c6n6GlHRGac1865n324XtuUlTaWMaV_VPHwzJVC-I-UtW6dt_aEqiOGp0-o1xpLBD9v6v5VI0Nj4uuQMmRkvjhhEB2QUZv6VNlhuIaxRunwNdA0DIpu5WBJVi2TfXVVTqrWHZJo9suOJ8uSSg2vnZJO0EJrKWS7dkqDId6AA9Rjc6x4ht1WHtYz_7s0C-JHrzAHjrKfb8mC3JPamwrciTGTHjENpmDienhIPbHfDDubaQenoDBxZubMbElbpct7IWDBSbCDz9TJpmfbk=')
+SESSION_STRING = os.getenv('SESSION_STRING', '')
 
 TIMEZONE = pytz.timezone('Africa/Tripoli')
 
@@ -33,12 +33,23 @@ max_delay = 35
 
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
+from telethon.tl.types import InputDeviceInfo
 
-# إنشاء العميل باستخدام StringSession
+# إعدادات الجهاز كـ iPhone 17 Pro Max
+device_model = "iPhone 17 Pro Max"
+system_version = "iOS 18.1.0"
+app_version = "10.5.0"
+lang_code = "ar"
+
+# إنشاء العميل مع إعدادات الجهاز
 client = TelegramClient(
     session=StringSession(SESSION_STRING),
     api_id=API_ID,
-    api_hash=API_HASH
+    api_hash=API_HASH,
+    device_model=device_model,
+    system_version=system_version,
+    app_version=app_version,
+    lang_code=lang_code
 )
 
 def can_schedule():
@@ -348,10 +359,11 @@ async def split_only_handler(event):
 @client.on(events.NewMessage(pattern='فحص'))
 async def test_handler(event):
     try:
-        status = f"""البوت يعمل بشكل طبيعي
-التوقيت: ليبيا
-الفاصل: 15 دقيقة
-الوقت: {datetime.now(TIMEZONE).strftime('%Y-%m-%d %H:%M:%S')}"""
+        status = f"""📱 البوت يعمل بشكل طبيعي
+📱 الجهاز: iPhone 17 Pro Max
+📍 التوقيت: ليبيا
+⏰ الفاصل: 15 دقيقة
+🕒 الوقت: {datetime.now(TIMEZONE).strftime('%Y-%m-%d %H:%M:%S')}"""
         await event.reply(status)
         logger.info("تم فحص البوت")
     except Exception as e:
@@ -402,33 +414,36 @@ async def delete_scheduled_handler(event):
 
 @client.on(events.NewMessage(pattern='مساعدة'))
 async def help_handler(event):
-    help_text = """أوامر البوت:
+    help_text = """📱 **أوامر البوت - iPhone 17 Pro Max**
 
-الجدولة:
-• جدول - جدولة 96 رسالة كل 15 دقيقة
-• جدولة اليوم - جدولة لبقية اليوم كل 15 دقيقة
-• جدولة 24 ساعة - جدولة لـ24 ساعة كل 15 دقيقة
+📅 **الجدولة:**
+• `جدول` - جدولة 96 رسالة كل 15 دقيقة
+• `جدولة اليوم` - جدولة لبقية اليوم كل 15 دقيقة
+• `جدولة 24 ساعة` - جدولة لـ24 ساعة كل 15 دقيقة
 
-أدوات:
-• تقسيم - تقسيم وخلط الرسائل
-• فحص - فحص حالة البوت
-• مساعدة - عرض هذه الرسالة
+🛠️ **أدوات:**
+• `تقسيم` - تقسيم وخلط الرسائل
+• `فحص` - فحص حالة البوت
+• `مساعدة` - عرض هذه الرسالة
 
-إدارة المجدول:
-• حذف المجدول - حذف جميع الرسائل
+🗑️ **إدارة المجدول:**
+• `حذف المجدول` - حذف جميع الرسائل
 
-معلومات:
+📊 **معلومات:**
 • التوقيت: ليبيا
 • الفاصل: 15 دقيقة
-• الإجمالي: 96 رسالة/يوم"""
+• الإجمالي: 96 رسالة/يوم
+• الجهاز: iPhone 17 Pro Max"""
     await event.reply(help_text)
 
 async def main():
     try:
+        # بدء العميل مع معالجة خاصة للجلسات
         await client.start()
         me = await client.get_me()
         
         logger.info(f"✅ البوت يعمل على GitHub Actions")
+        logger.info(f"📱 الجهاز: iPhone 17 Pro Max")
         logger.info(f"👤 الاسم: {me.first_name}")
         logger.info("📍 التوقيت: ليبيا")
         logger.info("⏰ الفاصل: 15 دقيقة")
@@ -438,6 +453,9 @@ async def main():
         
     except Exception as e:
         logger.error(f"❌ خطأ في بدء البوت: {e}")
+        # إعادة المحاولة بعد 30 ثانية
+        await asyncio.sleep(30)
+        await main()
 
 if __name__ == '__main__':
     client.loop.run_until_complete(main())
