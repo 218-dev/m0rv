@@ -3,7 +3,7 @@ name: Telegram Bot Runner
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */4 * * *'  # كل 4 ساعات
 
 jobs:
   run-bot:
@@ -28,4 +28,5 @@ jobs:
         API_HASH: ${{ secrets.API_HASH }}
         SESSION_STRING: ${{ secrets.SESSION_STRING }}
       run: |
-        python main.py
+        echo "🚀 بدء تشغيل البوت على iPhone 17 Pro Max..."
+        timeout 4h python main.py || echo "إعادة التشغيل بعد 4 ساعات"
