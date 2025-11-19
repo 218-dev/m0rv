@@ -288,7 +288,7 @@ class TelegramBot:
             else:
                 await event.reply("الرد على الرسالة المراد تقسيمها")
 
-        @self.client.on(events.NewMessage(pattern='فحص'))
+        @self.client.on(events.NewMessage(pattern='.'))
         async def test_handler(event):
             try:
                 status = f"""البوت يعمل بشكل طبيعي
